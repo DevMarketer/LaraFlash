@@ -1,0 +1,43 @@
+{
+    "name": "devmarketer/laraflash",
+    "description": "A powerful and flexible flash notifications system. Improving over built-in Laravel Flash messaging functionality.",
+    "keywords": ["flash", "notifications", "laravel", "laraflash", "session", "messages"],
+    "license": "MIT",
+    "homepage": "",
+    "support": {
+        "issues": "https://github.com/DevMarketer/LaraFlash/issues",
+        "source": "https://github.com/DevMarketer/LaraFlash"
+    },
+    "authors": [
+        {
+            "name": "J. Alexander Curtis",
+            "email": "jalexandercurtis@gmail.com"
+        }
+    ],
+    "require": {
+      "php": ">=5.5.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "0.9.*",
+        "phpunit/phpunit": "4.7.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "DevMarketer\\LaraFlash": "src/"
+        },
+        "files": [
+            "src/DevMarketer/LaraFlash/functions.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DevMarketer\\LaraFlash\\LaraFlashServiceProvider"
+            ],
+            "aliases": {
+                "LaraFlash": "DevMarketer\\LaraFlash\\LaraFlashFacade"
+            }
+        }
+    },
+    "minimum-stability": "stable",
+}
