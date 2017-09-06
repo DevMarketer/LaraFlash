@@ -73,6 +73,50 @@ class LaraFlash
     }
 
 	/**
+	 * Set priority property for chaining notification
+	 *
+	 * @param 	$params
+	 * @return $this
+	 */
+		public function typeShorthand($type, $params = [])
+		{
+			$options = [];
+			$content = NULL;
+			$count = count($params);
+
+			if ($count < 1) {
+				# no params passed, set last notification type
+				$this->updateLastNotification(['type' => $type]);
+			} elseif ($count == 1) {
+				if (is_array($params[0])) {
+					# assume its an options array
+					$options = $params[0];
+				} else {
+					# assume the one param is content
+					$content = $params[0];
+				}
+			} elseif ($count == 2) {
+				if (is_array($params[1])) {
+					# assume second param is options array, first param is content
+					$content = $params[0];
+					$options = $params[1];
+				} else {
+					$content = $params[0];
+					$options = ['title' => $params[1]];
+				}
+			} elseif ($count == 3) {
+				if (is_array($params[2])) {
+					$content = $params[0];
+					$options = array_merge($params[2], ['title' => $params[1]]);
+				} else {
+					throw new Exception("When 3 parameters given, third parameter must be an Array");
+				}
+			}
+
+			return $this->add($content, array_merge($options, ['type' => $type]));
+		}
+
+	/**
    * Fluent Interface
 	 *
    * Create a new notification fluently with chainable methods
@@ -122,6 +166,66 @@ class LaraFlash
     {
 			return $this->updateLastNotification(['priority' => $priority]);
     }
+
+	/**
+	 * Set type property to info with variable length parameters
+	 *   0 params = () set last notification to "info" type for  fluent chaining
+	 *   1 param = (Array $options)
+	 *   2 params = ($content, Array $options)
+ 	 *   3 params = ($content, $title, Array $options)
+	 *
+	 * @param 	variable	$params
+	 * @return $this
+	 */
+		public function info(...$params)
+		{
+			return $this->typeShorthand('info', $params);
+		}
+
+	/**
+	 * Set type property to SUCCESS with variable length parameters
+	 *   0 params = () set last notification to "success" type for  fluent chaining
+	 *   1 param = (Array $options)
+	 *   2 params = ($content, Array $options)
+	 *   3 params = ($content, $title, Array $options)
+	 *
+	 * @param 	variable	$params
+	 * @return $this
+	 */
+		public function success(...$params)
+		{
+			return $this->typeShorthand('success', $params);
+		}
+
+	/**
+	 * Set type property to warning with variable length parameters
+	 *   0 params = () set last notification to "warning" type for  fluent chaining
+	 *   1 param = (Array $options)
+	 *   2 params = ($content, Array $options)
+	 *   3 params = ($content, $title, Array $options)
+	 *
+	 * @param 	variable	$params
+	 * @return $this
+	 */
+		public function warning(...$params)
+		{
+			return $this->typeShorthand('warning', $params);
+		}
+
+	/**
+	 * Set type property to danger with variable length parameters
+	 *   0 params = () set last notification to "danger" type for  fluent chaining
+	 *   1 param = (Array $options)
+	 *   2 params = ($content, Array $options)
+ 	 *   3 params = ($content, $title, Array $options)
+	 *
+	 * @param 	variable	$params
+	 * @return $this
+	 */
+		public function danger(...$params)
+		{
+			return $this->typeShorthand('danger', $params);
+		}
 
 	/**
    * Retrieval Methods
