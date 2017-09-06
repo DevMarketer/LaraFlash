@@ -35,14 +35,14 @@ class LaraFlash
 	/**
    * Add a notification to our collection.
    *
-   * @param  string   $content
-   * @param  array    $options
+   * @param  string|NULL   	$content
+   * @param  array    			$options
    * @return $this
    */
-    public function add($content, $options = [])
+    public function add($content = NULL, $options = [])
     {
-      $options['content'] = $content;
-			$this->notifications->push(new Notification($options));
+			if (!empty($content)) $options['content'] = $content;
+      $this->notifications->push(new Notification($options));
       return $this->flash();
     }
 
@@ -53,22 +53,76 @@ class LaraFlash
    * @param  array    $options
    * @return $this
    */
-    public function push($content, $options = [])
+    public function push($content = NULL, $options = [])
     {
-        return $this->add($content, $options);
+      return $this->add($content, $options);
     }
 
 	/**
-   * Flash everything to the session.
+   * Alias for the "add" method.
    *
+   * @param  string   $content
+   * @param  array    $options
    * @return $this
    */
-    protected function flash()
+    public function new($content = NULL, $options = [])
     {
-        $this->session->flash('laraflash', $this->notifications);
-
-				return $this;
+      return $this->add($content, $options);
     }
+
+	/**
+   * Fluent Interface
+   *  Create a new notification fluently
+   */
+
+	/**
+   * Set type for chaining notification
+   *
+	 * @param string
+   * @return $this
+   */
+    public function type($type)
+    {
+			return $this->updateLastNotification(['type' => $type]);
+    }
+
+	/**
+   * Set content for chaining notification
+   *
+	 * @param string
+   * @return $this
+   */
+    public function content($content)
+    {
+			return $this->updateLastNotification(['content' => $content]);
+    }
+
+	/**
+   * Set title for chaining notification
+   *
+	 * @param string
+   * @return $this
+   */
+    public function title($title)
+    {
+			return $this->updateLastNotification(['title' => $title]);
+    }
+
+	/**
+   * Set priority for chaining notification
+   *
+	 * @param int
+   * @return $this
+   */
+    public function priority($priority)
+    {
+			return $this->updateLastNotification(['priority' => $priority]);
+    }
+
+	/**
+   * Retrieval Methods
+   *  Used to get notifications
+   */
 
 	/**
    * Retrieve all of the LaraFlash notifications as an object
@@ -99,5 +153,28 @@ class LaraFlash
 		public function all()
 		{
 				return $this->notifications()->all();
+		}
+
+	/**
+   * Update last notification (used for chaining)
+   *
+	 * @param array
+   * @return $this
+   */
+    public function updateLastNotification($options = [])
+    {
+			$this->notifications->last()->setOptions($options, true);
+			return $this->flash();
+    }
+
+	/**
+	 * Flash everything to the session.
+	 *
+	 * @return $this
+	 */
+		protected function flash()
+		{
+				$this->session->flash('laraflash', $this->notifications);
+				return $this;
 		}
 }
