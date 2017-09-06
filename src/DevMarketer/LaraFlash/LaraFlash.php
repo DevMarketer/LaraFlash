@@ -35,24 +35,27 @@ class LaraFlash
 	/**
    * Add a notification to our collection.
    *
-   * @param  string|null $notification
+   * @param  string   $content
+   * @param  array    $options
    * @return $this
    */
-    public function add($notification = null)
+    public function add($content, $options = [])
     {
-			$this->notifications->push($notification);
+      $options['content'] = $content;
+			$this->notifications->push(new Notification($options));
       return $this->flash();
     }
 
 	/**
    * Alias for the "add" method.
    *
-   * @param  string|null $notification
+   * @param  string   $content
+   * @param  array    $options
    * @return $this
    */
-    public function push($notification = null)
+    public function push($content, $options = [])
     {
-        return $this->add($message);
+        return $this->add($content, $options);
     }
 
 	/**
@@ -60,7 +63,7 @@ class LaraFlash
    *
    * @return $this
    */
-    public function flash()
+    protected function flash()
     {
         $this->session->flash('laraflash', $this->notifications);
 
