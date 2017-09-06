@@ -3,7 +3,7 @@
     "description": "A powerful and flexible flash notifications system. Improving over built-in Laravel Flash messaging functionality.",
     "keywords": ["flash", "notifications", "laravel", "laraflash", "session", "messages"],
     "license": "MIT",
-    "homepage": "",
+    "homepage": "https://github.com/DevMarketer/LaraFlash",
     "support": {
         "issues": "https://github.com/DevMarketer/LaraFlash/issues",
         "source": "https://github.com/DevMarketer/LaraFlash"
