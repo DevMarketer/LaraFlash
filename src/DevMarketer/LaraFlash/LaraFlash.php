@@ -59,7 +59,9 @@ class LaraFlash
     }
 
 	/**
-   * Alias for the "add" method.
+   * Alias for the "add" method:
+	 *  Designed for use with the fluent chainable commands,
+	 *  but will work just like the "push()" and "add()" methods
    *
    * @param  string   $content
    * @param  array    $options
@@ -72,11 +74,13 @@ class LaraFlash
 
 	/**
    * Fluent Interface
-   *  Create a new notification fluently
+	 *
+   * Create a new notification fluently with chainable methods
+	 * ===========================================
    */
 
 	/**
-   * Set type for chaining notification
+   * Set type property for chaining notification
    *
 	 * @param string
    * @return $this
@@ -87,7 +91,7 @@ class LaraFlash
     }
 
 	/**
-   * Set content for chaining notification
+   * Set content property for chaining notification
    *
 	 * @param string
    * @return $this
@@ -98,7 +102,7 @@ class LaraFlash
     }
 
 	/**
-   * Set title for chaining notification
+   * Set title property for chaining notification
    *
 	 * @param string
    * @return $this
@@ -109,7 +113,7 @@ class LaraFlash
     }
 
 	/**
-   * Set priority for chaining notification
+   * Set priority property for chaining notification
    *
 	 * @param int
    * @return $this
@@ -153,6 +157,81 @@ class LaraFlash
 		public function all()
 		{
 				return $this->notifications()->all();
+		}
+
+	/**
+	 * Get the FIRST notification in the notifications property
+	 *
+	 * @return /DevMarketer/LaraFlash/Notification
+	 */
+		protected function first()
+		{
+			return $this->notifications->first();
+		}
+
+	/**
+	 * Get the LAST notification in the notifications property
+	 *
+	 * @return /DevMarketer/LaraFlash/Notification
+	 */
+		protected function last()
+		{
+			return $this->notifications->last();
+		}
+
+	/**
+	 * Keep the LaraFlash session for another request
+	 *
+	 * @param 	array 	$keys
+	 * @return 	$this
+	 */
+		protected function keep($keys = ["laraflash"])
+		{
+			// optionally users can pass in an array of other session
+			// keys they want to keep in addition to LaraFlash
+			return $this->session->keep(array_unique(array_merge($keys, ["laraflash"]), SORT_STRING));
+		}
+
+	/**
+	 * Clear all of the notifications in the LaraFlash object
+	 *
+	 * @return $this
+	 */
+		protected function clear()
+		{
+				$this->notifications = collect();
+				$this->session->forget('laraflash');
+				return $this;
+		}
+
+	/**
+	 * Override a notification with a new one, instantiates new
+	 *  notification and sets it equal to options
+	 *
+	 * @param 	int 		$key
+	 * @param		array 	$options
+	 * @return 	$this
+	 */
+		public function override($key = -1, $options = [])
+		{
+			if ($key >= 0) {
+				$notification = $this->notifications->get($key);
+			} else {
+				$notification = $this->notifications->last();
+			}
+			$notification->setOptions($options, false);
+			return $this->flash();
+		}
+
+	/**
+	 * Override the latest notification with a new one
+	 *
+	 * @return $this
+	 */
+		protected function overrideLast($options = [])
+		{
+				$this->override(-1, $options);
+				return $this;
 		}
 
 	/**
