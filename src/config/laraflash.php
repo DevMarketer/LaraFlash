@@ -9,7 +9,7 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | Enable Notification Views
+    | Enable Notification Views (COMING SOON)
     |--------------------------------------------------------------------------
     |
     | If true, the package will handle displaying the notifications in the view
@@ -39,7 +39,7 @@ return [
 				 *  This is an arbitrary integer to indicate priority over other
 				 *  notifications. A higher number is considered higher priority.
          */
-        'type' => 5,
+        'priority' => 5,
         /**
          * Notification Title
 				 *  (ie. "Success: ", "Warning: ", "Notice: ", null)
@@ -62,6 +62,10 @@ return [
     |
     */
     'classes' => [
+				/**
+				 * Used for important and critical notices or errors.
+				 */
+				'success' => 'alert-success',
         /**
          * Used for informational notices.
          */
@@ -69,6 +73,10 @@ return [
         /**
          * Used for important and critical notices or errors.
          */
-        'danger' => 'alert-danger',
+        'warning' => 'alert-warning',
+				/**
+				 * Used for important and critical notices or errors.
+				 */
+				'danger' => 'alert-danger',
     ],
 ];
