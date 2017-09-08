@@ -23,7 +23,7 @@ class LaraFlashServiceProvider extends ServiceProvider
     {
       $this->publishes([
         __DIR__.'/../../config/laraflash.php' => config_path('laraflash.php'),
-      ]);
+      ], 'laraflash');
     }
 
     /**

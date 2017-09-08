@@ -2,7 +2,15 @@
 
 All features, bug fixes, and changes in the code base will be updated and documented here.
 
-## Version 1: Offical Release
+## Version 1: Official Release
+
+##### 1.0.1
+
+**Fixes:**
+
+1. Tag added to config file to make it easier to publish.
+1. Typo in `CONTRIBUTING.md`
+
 
 ##### 1.0.0
 
