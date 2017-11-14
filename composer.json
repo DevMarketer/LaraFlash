@@ -14,9 +14,6 @@
             "email": "jalexandercurtis@gmail.com"
         }
     ],
-    "require": {
-      "php": ">=5.5.0"
-    },
     "autoload": {
         "psr-0": {
             "DevMarketer\\LaraFlash": "src/"
@@ -34,6 +31,5 @@
                 "LaraFlash": "DevMarketer\\LaraFlash\\LaraFlashFacade"
             }
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
