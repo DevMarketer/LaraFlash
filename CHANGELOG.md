@@ -4,6 +4,25 @@ All features, bug fixes, and changes in the code base will be updated and docume
 
 ## Version 1: Official Release
 
+##### 1.3.0
+
+**New Features:**
+
+1. New Helper Method: `LaraFlash::snackbar('Hello World')` will work just like the other type methods `LaraFlash::success('Success!')` and `LaraFlash::danger()` and so forth, but it will set the type to be `"snackbar"`. This is helpful for those that prefer the snackbar message type.
+1. New Method: `LaraFlash::allByPriority($order = 'desc')`. This method will sort all of the notifications in the current session by priority as defined by the priority attribute. The priority attribute is an arbitrary numeric attribute you can set however you wish. This can be set by passing in `priority` into an options object when creating a notification or using the `->priority(10)` fluent syntax. So `LaraFlash::success('Hello World')->priority(10)` creates a success notification with the _"hello world"_ message and a priority of 10. Each notification is given a priority even if ommitted. This default priority can be set in the configuration file (but is 5 by default). The new `LaraFlash::allByPriority('asc')` method will sort all notifications by this priority attribute. Options for sorting is either "ascending" (`asc`) meaning lowest priority value (by int value) will be first, up to the highest. The default of "descending" (`desc`) will sort from highest priority to lowest. Within a tie (multiple notifications with the same priority value) will be ordered by the order they were flashed to the session. The first notification with that tied priority value that was flashed will be the first to display once that priority value is reached in the sorting (higher and lower values will still sort around it as expected and order it was flashed only accounts for ordering notificiations that share the same priority value).
+1. New Method: `LaraFlash::allByType($order='desc', $sortOthersLast = true)`. This method is great for displaying all notifications sorted by type. You may choose the order it is sorted in by passing in an argument. Accepted arguments are either `asc` for ascending, `desc` for descending (the default), or an array representing the order you want them sorted. By default notifications will be sorted _danger, warning, info, success_ which is represented by the `desc` order argument. Supplying instead `asc` will reverse the above order moving from success to danger. Also passing in an array will customize this order. An example array might look like: `["info", "danger", "success"]`. A second argument is optional and will dictate how non-matching types are sorted. By default they will be added to the end after other types have been sorted. But passing in a `false` value in this argument will force any type other than those in the `$order` array to display first, followed by the other notifications sorted by the selected `$order`. A type of `"others"` can be added to the `$order` array to customize where non-matching types are sorted. So `["success", "others", "danger"]` will sort all "success" notifications first, all non-danger notifications second, followed finally by "danger" notifications last. As with the _allByPriority()_ method explained above, in the case of a tie (multiple of the same type) the sorted order within that type will be determined by the first notification to be flashed to the session, followed by the next one, and so forth. All other sorting outside of that type will be honored.
+
+**Fixes:**
+
+1. The `keep()` method is now a `public` function so it can be called from Views or Controllers if you wish to keep the _laraflash_ notifications for another session.  
+You can simply call `LaraFlash::keep()` to keep any _LaraFlash_ notifications for another session. However, you can also pass in an array of session keys if you want to keep other session values in addition to those managed by _LaraFlash_.
+
+##### 1.2.0
+
+**New Features:**
+
+1. New Method `LaraFlash::allByPriority()` allows you to get all notifications sorted by priority. By default it will sort from highest priority to lowest priority (descending or `desc`). But you can also pass in `asc` to sort in ascending order or from lowest to highest priority.
+
 ##### 1.1.0
 
 **New Features:**

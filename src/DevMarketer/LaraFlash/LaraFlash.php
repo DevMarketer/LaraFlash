@@ -174,8 +174,8 @@ class LaraFlash
 	 *   2 params = ($content, Array $options)
  	 *   3 params = ($content, $title, Array $options)
 	 *
-	 * @param 	variable	$params
-	 * @return $this
+	 * @param 	mixed		$params
+	 * @return 	$this
 	 */
 		public function info(...$params)
 		{
@@ -189,8 +189,8 @@ class LaraFlash
 	 *   2 params = ($content, Array $options)
 	 *   3 params = ($content, $title, Array $options)
 	 *
-	 * @param 	variable	$params
-	 * @return $this
+	 * @param 	mixed		$params
+	 * @return 	$this
 	 */
 		public function success(...$params)
 		{
@@ -204,8 +204,8 @@ class LaraFlash
 	 *   2 params = ($content, Array $options)
 	 *   3 params = ($content, $title, Array $options)
 	 *
-	 * @param 	variable	$params
-	 * @return $this
+	 * @param 	mixed		$params
+	 * @return 	$this
 	 */
 		public function warning(...$params)
 		{
@@ -219,12 +219,27 @@ class LaraFlash
 	 *   2 params = ($content, Array $options)
  	 *   3 params = ($content, $title, Array $options)
 	 *
-	 * @param 	variable	$params
-	 * @return $this
+	 * @param 	mixed		$params
+	 * @return 	$this
 	 */
 		public function danger(...$params)
 		{
 			return $this->typeShorthand('danger', $params);
+		}
+
+	/**
+	 * Set type property to snackbar with variable length parameters
+	 *   0 params = () set last notification to "snackbar" type for  fluent chaining
+	 *   1 param = (Array $options)
+	 *   2 params = ($content, Array $options)
+ 	 *   3 params = ($content, $title, Array $options)
+	 *
+	 * @param 	mixed		$params
+	 * @return 	$this
+	 */
+		public function snackbar(...$params)
+		{
+			return $this->typeShorthand('snackbar', $params);
 		}
 
 	/**
@@ -251,6 +266,70 @@ class LaraFlash
     {
 				return $this->notifications();
     }
+
+	/**
+   * Get all notifications as an array, sorted by priority
+	 * 		Accepts only 'asc' or 'desc' as valid sort orders.
+	 * 		which represents "assending" (lowest to highest),
+	 * 		or "descending" (highest to lowest), respectively
+   *
+	 * @param		string	$order ('asc' or 'desc')
+   * @return	array 	array of objects, sorted by priority
+   */
+    public function allByPriority($order = 'desc')
+    {
+			if (strtolower($order) === 'asc') {
+				return array_values($this->notifications->sortBy(function ($notification, $key) {
+					return $notification->priority;
+				})->all());
+			} else if (strtolower($order) === 'desc') {
+				return array_values($this->notifications->sortByDesc(function ($notification, $key) {
+					return $notification->priority;
+				})->all());
+			}
+    }
+
+	/**
+	 * Get all notifications as an array, sorted by type
+	 * 		Accepts 'asc' or 'desc' as valid sort orders.
+	 * 		Will sort by success, info, warning, and danger (in asc order),
+	 * 		and reverse (from danger to success) in dsc order (the default).
+	 * 		Optionally, you could also pass in an array to the $order
+	 * 		argument to define your own order.
+	 *
+	 *		By default if a type does not match one of those in the $order
+	 *		array (such as 'snackbar' or 'general') then it will be sorted
+	 * 		and placed after all other values. If $sortOthersLast is set to
+	 * 		false then it will place any non-matching types before any
+	 *		matching types.
+	 *
+	 * @param		mixed		$order ('asc' or 'desc' or array of custom order)
+	 * @param 	bool		$sortOthersLast
+	 * @return	array		array of objects sorted by type
+	 */
+		public function allByType($order = 'desc', $sortOthersLast = true)
+		{
+			$defaults = ['success', 'info', 'warning', 'danger'];
+			$priorities = null;
+			if (is_array($order)) {
+				$priorities = array_flip($order);
+			} else if (is_string($order) && strtolower($order) == 'asc') {
+				$priorities = array_flip($defaults);
+			} else if (is_string($order) && strtolower($order) == 'desc') {
+				$priorities = array_flip(array_reverse($defaults));
+			}
+			if ($sortOthersLast && !isset($priorities["others"])) {
+				$priorities['others'] = count($priorities);
+			} else if (!isset($priorities["others"])) {
+				array_walk($priorities, function(&$v) {
+					$v = $v+1;
+				});
+				$priorities['others'] = 0;
+			}
+			return array_values($this->notifications->sortBy(function ($notification, $key) use ($priorities) {
+				return isset($priorities[strtolower($notification->type)]) ? $priorities[strtolower($notification->type)] : $priorities['others'];
+			})->all());
+		}
 
 	/**
 	 * Shortcut for notifications()->all() to return
@@ -291,10 +370,10 @@ class LaraFlash
 	 * @param 	array 	$keys
 	 * @return 	$this
 	 */
-		protected function keep($keys = ["laraflash"])
+		public function keep($keys = ["laraflash"])
 		{
 			// optionally users can pass in an array of other session
-			// keys they want to keep in addition to LaraFlash
+			//   keys they want to keep in addition to LaraFlash
 			return $this->session->keep(array_unique(array_merge($keys, ["laraflash"]), SORT_STRING));
 		}
 
@@ -322,8 +401,8 @@ class LaraFlash
 		}
 
 	/**
-	 * Shortcut for notifications()->count() to return
-	 *  an integer of total notifications or 0 if empty
+	 * Returns True if 1 or more notifications are flashed
+	 *  to the current session, false otherwise.
 	 *
 	 * @return int
 	 */
