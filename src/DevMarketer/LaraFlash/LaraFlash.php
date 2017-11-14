@@ -233,7 +233,7 @@ class LaraFlash
    */
 
 	/**
-   * Retrieve all of the LaraFlash notifications as an object
+   * Retrieve all of the LaraFlash notifications as an object or null if empty
    *
    * @return object $this
    */
@@ -260,15 +260,16 @@ class LaraFlash
 	 */
 		public function all()
 		{
-				return $this->notifications()->all();
+			return $this->notifications->all();
 		}
 
 	/**
 	 * Get the FIRST notification in the notifications property
 	 *
 	 * @return /DevMarketer/LaraFlash/Notification
+	 * 					returns null if empty
 	 */
-		protected function first()
+		public function first()
 		{
 			return $this->notifications->first();
 		}
@@ -277,8 +278,9 @@ class LaraFlash
 	 * Get the LAST notification in the notifications property
 	 *
 	 * @return /DevMarketer/LaraFlash/Notification
+	 * 					returns null if empty
 	 */
-		protected function last()
+		public function last()
 		{
 			return $this->notifications->last();
 		}
@@ -306,6 +308,28 @@ class LaraFlash
 				$this->notifications = collect();
 				$this->session->forget('laraflash');
 				return $this;
+		}
+
+	/**
+	 * Shortcut for notifications()->count() to return
+	 *  an integer of total notifications or 0 if empty
+	 *
+	 * @return int
+	 */
+		public function count()
+		{
+				return $this->notifications->count();
+		}
+
+	/**
+	 * Shortcut for notifications()->count() to return
+	 *  an integer of total notifications or 0 if empty
+	 *
+	 * @return int
+	 */
+		public function exists()
+		{
+				return $this->notifications->count() > 0 ? true : false;
 		}
 
 	/**

@@ -4,9 +4,20 @@ All features, bug fixes, and changes in the code base will be updated and docume
 
 ## Version 1: Official Release
 
+##### 1.1.0
+
+**New Features:**
+
+1. New Method `LaraFlash::exists()` returns `TRUE` if 1 or more notifications exist in the current session and `FALSE` if there are no notifications in the session.
+1. New Method `LaraFlash::count()` returns an `Integer` of how many notifications are in the current session. Will return 0 if none exist.
+
+**Fixed:**
+
+1. Resolves `LaraFlash::all()` bug where it would return `null` if no notifications exist. It now returns an empty array if no notifications exist in the session. This makes more sense since if notifications exists it will return an array of all the notification objects. Now you can always expect an array to be returned. Use `LaraFlash::dump()` or `LaraFlash::notifications()` which will return the array object if exists or `null` if empty. This will give the same effect as the previous `LaraFlash::all()` method previously did.
+
 ##### 1.0.1 - 1.0.2
 
-**Fixes:**
+**Fixed:**
 
 1. Removed Mockery and PHPUnit Dependencies. Should make life easier for most people.  _(v1.0.2)_
 1. Tag added to config file to make it easier to publish. _(v1.0.1)_
