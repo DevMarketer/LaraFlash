@@ -4,12 +4,13 @@ All features, bug fixes, and changes in the code base will be updated and docume
 
 ## Version 1: Official Release
 
-##### 1.0.1
+##### 1.0.1 - 1.0.2
 
 **Fixes:**
 
-1. Tag added to config file to make it easier to publish.
-1. Typo in `CONTRIBUTING.md`
+1. Removed Mockery and PHPUnit Dependencies. Should make life easier for most people.  _(v1.0.2)_
+1. Tag added to config file to make it easier to publish. _(v1.0.1)_
+1. Typo in `CONTRIBUTING.md` _(v1.0.1)_
 
 
 ##### 1.0.0
